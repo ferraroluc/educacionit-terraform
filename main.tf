@@ -65,8 +65,8 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_key_pair" "lab-key" {
-	key_name   = "terraform_ec2_key"
-	public_key = "${file("terraform-ec2-key.pub")}"
+  key_name   = "terraform_ec2_key"
+  public_key = "${file("terraform-ec2-key.pub")}"
 }
 
 resource "aws_instance" "lab-vm" {
