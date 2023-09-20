@@ -77,8 +77,3 @@ resource "aws_instance" "lab-vm" {
   subnet_id                   = aws_subnet.lab-subnet.id
   security_groups             = [aws_security_group.lab-sg-ssh.id]
 }
-
-output "instance_ip" {
-  description = "The public ip for ssh access"
-  value       = aws_instance.lab-vm.public_ip
-}
