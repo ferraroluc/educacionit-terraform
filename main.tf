@@ -80,13 +80,11 @@ resource "aws_instance" "lab-vm" {
   user_data = <<-EOL
   #!/bin/bash -xe
 
-  apt update
-
   # Install and configure Docker
+  apt update
   apt install -y docker.io
   addgroup --system docker
   adduser ubuntu docker
   newgrp docker
-  
   EOL
 }
