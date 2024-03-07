@@ -15,28 +15,28 @@ resource "aws_internet_gateway" "lab-igw" {
 
 resource "aws_route_table" "lab-rt" {
   vpc_id = aws_vpc.lab-vpc.id
-  
+
   route {
-    cidr_block = "0.0.0.0/0" 
-    gateway_id = aws_internet_gateway.lab-igw.id 
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.lab-igw.id
   }
 }
 
-resource "aws_route_table_association" "lab-rta"{
-    subnet_id      = aws_subnet.lab-subnet.id
-    route_table_id = aws_route_table.lab-rt.id
+resource "aws_route_table_association" "lab-rta" {
+  subnet_id      = aws_subnet.lab-subnet.id
+  route_table_id = aws_route_table.lab-rt.id
 }
 
 resource "aws_security_group" "lab-sg-ssh" {
   name   = "allow_ssh"
-  vpc_id = aws_vpc.lab-vpc.id 
+  vpc_id = aws_vpc.lab-vpc.id
 
   ingress {
-    description      = "allow ssh"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+    description = "allow ssh"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -66,7 +66,7 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_key_pair" "lab-key" {
   key_name   = "terraform_ec2_key"
-  public_key = "${file("terraform-ec2-key.pub")}"
+  public_key = file("terraform-ec2-key.pub")
 }
 
 resource "aws_instance" "lab-vm" {
@@ -76,4 +76,17 @@ resource "aws_instance" "lab-vm" {
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.lab-subnet.id
   security_groups             = [aws_security_group.lab-sg-ssh.id]
+
+  user_data = <<-EOL
+  #!/bin/bash -xe
+
+  apt update
+
+  # Install and configure Docker
+  apt install -y docker.io
+  addgroup --system docker
+  adduser ubuntu docker
+  newgrp docker
+  
+  EOL
 }
