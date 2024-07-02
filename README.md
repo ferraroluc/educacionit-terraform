@@ -10,7 +10,7 @@ Antes que nada, para correr la automatización se requieren unas credenciales `A
 
 ## Claves Público-Privado
 
-Ahora, corresponde generar un juego de llaves público-privado con el comando `ssh-keygen -f terraform-ec2-key`, dentro de la carpeta del proyecto de Terraform.
+Ahora, corresponde generar un juego de llaves público-privado con el comando `ssh-keygen -t rsa -f terraform-ec2-key`, dentro de la carpeta del proyecto de Terraform.
 
 ## Ejecutar la automatización
 
