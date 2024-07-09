@@ -32,6 +32,14 @@ resource "aws_security_group" "lab-sg-ssh" {
   vpc_id = aws_vpc.lab-vpc.id
 
   ingress {
+    description = "allow ping"
+    from_port   = 8
+    to_port     = 0
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
     description = "allow ssh"
     from_port   = 22
     to_port     = 22
@@ -71,7 +79,7 @@ resource "aws_key_pair" "lab-key" {
 
 resource "aws_instance" "lab-vm" {
   ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t3.micro"
+  instance_type               = "t2.nano"
   key_name                    = aws_key_pair.lab-key.key_name
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.lab-subnet.id
