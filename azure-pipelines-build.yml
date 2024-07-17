@@ -1,0 +1,47 @@
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: "Build"
+    jobs:
+      - job: "Build"
+        steps:
+          - task: TerraformInstaller@1
+            displayName: Install Terraform
+            inputs:
+              terraformVersion: "latest"
+
+          - bash: "mv backend.aws backend.tf"
+            displayName: "Prepare backend file"
+
+          - task: TerraformTaskV4@4
+            displayName: Terraform Init
+            inputs:
+              provider: "aws"
+              command: "init"
+              backendServiceAWS: "terraform-aws"
+              backendAWSBucketName: "educacionit"
+              backendAWSKey: "terraform.tfstate"
+
+          - task: TerraformTaskV4@4
+            displayName: Terraform Validate
+            inputs:
+              provider: "aws"
+              command: "validate"
+
+          - task: TerraformTaskV4@4
+            displayName: Terraform Plan
+            inputs:
+              provider: "aws"
+              command: "plan"
+              environmentServiceNameAWS: "terraform-aws"
+
+          - task: TerraformTaskV4@4
+            displayName: Terraform Apply
+            inputs:
+              provider: "aws"
+              command: "apply"
+              environmentServiceNameAWS: "terraform-aws"

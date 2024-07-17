@@ -1,0 +1,34 @@
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: Destroy
+    jobs:
+      - job: Destroy
+        steps:
+          - task: TerraformInstaller@1
+            displayName: Install Terraform
+            inputs:
+              terraformVersion: "latest"
+
+          - bash: "mv backend.aws backend.tf"
+            displayName: "Prepare backend file"
+
+          - task: TerraformTaskV4@4
+            displayName: Terraform Init
+            inputs:
+              provider: "aws"
+              command: "init"
+              backendServiceAWS: "terraform-aws"
+              backendAWSBucketName: "educacionit"
+              backendAWSKey: "terraform.tfstate"
+
+          - task: TerraformTaskV4@4
+            displayName: Terraform Destroy
+            inputs:
+              provider: "aws"
+              command: "destroy"
+              environmentServiceNameAWS: "terraform-aws"
