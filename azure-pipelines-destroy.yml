@@ -1,6 +1,13 @@
 pool:
   vmImage: ubuntu-latest
 
+schedules:
+- cron: '0 23 * * 5'
+  displayName: Destroy on Fridays
+  branches:
+    include:
+    - main
+
 stages:
   - stage: Destroy
     jobs:
