@@ -102,5 +102,6 @@ resource "aws_instance" "lab-vm" {
   addgroup --system docker
   adduser ubuntu docker
   newgrp docker
+  docker run -d -p 5000:5000 --name flask_server ferraroluc/flask-hello-world:latest
   EOL
 }
